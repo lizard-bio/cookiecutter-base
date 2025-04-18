@@ -1,0 +1,10 @@
+name: {{ cookiecutter.repo_name }}
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - coverage
+  - ruff
+  - python-dotenv>=0.5.1
+  - pre_commit
