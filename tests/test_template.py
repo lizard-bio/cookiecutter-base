@@ -1,9 +1,6 @@
 from pathlib import Path
-from subprocess import check_output
-
 
 CC_TEMPLATE_ROOT = Path(__file__).parents[1].resolve()
-
 
 def no_curlies(filepath):
     """Utility to make sure no curly braces appear in a file.
@@ -41,3 +38,56 @@ def check_license(path: Path) -> bool:
     # check if file starts with "BioLizard Proprietary License"
     with open(license_path) as fin:
         return "BioLizard Proprietary License" == next(fin).strip()
+
+
+def test_bake_python_project(cookies):
+    args = {
+        "lizard_code": "Liz.0.0",
+        "client_name": "Microsoft",
+        "project_name": "Microsoft",
+        "author_name": "Jeff Bezos"
+    }
+
+    result = cookies.bake(template=str(CC_TEMPLATE_ROOT), extra_context=args)
+
+    assert result.exit_code == 0
+    assert result.exception is None
+
+    assert result.project_path.name == args["project_name"].lower()
+    assert result.project_path.is_dir()
+    path_ = result.project_path
+
+    assert check_readme(path_, args["lizard_code"], args["project_name"])
+    check_environment(path_)
+    assert check_license(path_)
+
+
+def test_bake_python_and_R_project(cookies):
+    args = {
+        "lizard_code": "Liz.10.0",
+        "project_name": "Microsoft ChatGPT implementation",
+        "author_name": "Ronald Ronalds"
+    }
+
+    result = cookies.bake(template=str(CC_TEMPLATE_ROOT), extra_context=args)
+
+    assert result.exit_code == 0
+    assert result.exception is None
+
+    assert result.project_path.is_dir()
+    path_ = result.project_path
+
+    assert check_readme(path_, args["lizard_code"], args["project_name"])
+    check_environment(path_)
+
+
+def test_bake_long_project_code(cookies):
+    args = {
+        "lizard_code": "Liz.10.0.5.5",
+        "project_name": "Microsoft ChatGPT implementation",
+        "author_name": "Ronald Ronalds"
+    }
+
+    result = cookies.bake(template=str(CC_TEMPLATE_ROOT), extra_context=args)
+
+    assert result.exit_code == 0

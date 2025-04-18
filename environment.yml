@@ -5,3 +5,7 @@ channels:
 dependencies:
   - python=3.12
   - pytest=8.3.4
+  - pre-commit=3.4.0
+  - pip
+  - pip:
+      - pytest-cookies==0.7.0
