@@ -1,0 +1,1 @@
+cruft create -f https://github.com/lizard-bio/cookiecutter-base
